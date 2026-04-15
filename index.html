@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VideoSystem</title>
+    <!--Fontawesome para iconos-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- HEADER y NAV -->
+    <header>
+        <nav id="navbar">
+            <div class="nav-container">
+                <a id="logo" href="#" class="nav-logo">
+                    <i class="fas fa-film"></i> VideoSystem
+                </a>
+                <button id="hamburger-menu" class="hamburger-menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <ul id="nav-menu" class="nav-menu">
+                    <li><a id="init" class="nav-link active" href="#">Inicio</a></li>
+                    <!-- Las categorías se inyectarán dinámicamente -->
+                    <li><a id="nav-actors" class="nav-link" href="#">Actores</a></li>
+                    <li><a id="nav-directors" class="nav-link" href="#">Directores</a></li>
+                    <li><a id="nav-close-windows" class="nav-link" href="#">
+                        <i class="fas fa-times-circle"></i> Cerrar ventanas
+                    </a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main id="main-content">
+        <!-- El contenido se genera dinámicamente desde MVC -->
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-container">
+            <p>&copy; 2026 VideoSystem | Desarrollo Web Entorno Cliente</p>
+        </div>
+    </footer>
+
+    <!-- Scripts UT04 ,modelos -->
+    <script src="js/exceptions.js"></script>
+    <script src="js/entities.js"></script> 
+    <script src="js/videosystem.js"></script>
+    <!-- Scripts MVC UT05 -->
+    <script src="js/VideoSystemView.js"></script>
+    <script src="js/VideoSystemController.js"></script>
+    <script src="js/VideoSystemApp.js"></script>
+</body>
+</html>
