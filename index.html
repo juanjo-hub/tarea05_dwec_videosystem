@@ -44,11 +44,28 @@
         </div>
     </footer>
 
+    <!-- FAB Nueva producción (DWEC06) -->
+    <button id="fab-new-production" class="fab" title="Nueva producción">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <!-- Modal contenedor reutilizable (DWEC06) -->
+    <div id="modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <button class="modal-close" aria-label="Cerrar">
+                <i class="fas fa-times"></i>
+            </button>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
     <!-- Scripts UT04 ,modelos -->
     <script src="js/exceptions.js"></script>
     <script src="js/entities.js"></script> 
     <script src="js/videosystem.js"></script>
-    <!-- Scripts MVC UT05 -->
+    <!-- Scripts MVC UT05 + Forms UT06 -->
+    <script src="js/VideoSystemForms.js"></script>
     <script src="js/VideoSystemView.js"></script>
     <script src="js/VideoSystemController.js"></script>
     <script src="js/VideoSystemApp.js"></script>

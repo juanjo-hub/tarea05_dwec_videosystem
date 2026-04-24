@@ -27,6 +27,12 @@ class VideoSystemController {
         this[VIEW].bindCloseWindows(this.handleCloseWindows);
         this[VIEW].bindMenuToggle();
 
+        // Bindings de formularios (DWEC06)
+        this[VIEW].bindCreateProduction(this.handleOpenCreateProductionForm);
+        this[VIEW].bindDeleteProduction(this.handleOpenDeleteProductionForm);
+        this[VIEW].bindCastProduction(this.handleOpenCastForm);
+        this[VIEW].bindModalClose();
+
         // Gestión de history - popstate
         window.addEventListener('popstate', (event) => {
             if (event.state) {
@@ -470,5 +476,239 @@ class VideoSystemController {
 
         // Re-renderizar inicio
         this.onInit();
+    }
+
+    /* ============================================================
+     *  HANDLERS DE FORMULARIOS (DWEC06)
+     * ============================================================ */
+
+    // ---- 1. CREAR PRODUCCIÓN ----
+    handleOpenCreateProductionForm = () => {
+        const system = this[MODEL];
+
+        const categories = [];
+        for (const c of system.categories) categories.push(c);
+
+        const actors = [];
+        for (const a of system.actors) actors.push(a);
+
+        const directors = [];
+        for (const d of system.directors) directors.push(d);
+
+        const existingTitles = [];
+        for (const p of system.productions) existingTitles.push(p.title);
+
+        this[VIEW].showCreateProductionForm(
+            { categories, actors, directors, existingTitles },
+            (data) => this.handleCreateProduction(data)
+        );
+    }
+
+    handleCreateProduction = (data) => {
+        const system = this[MODEL];
+        try {
+            // 1. Crear la producción
+            let production;
+            if (data.type === 'Movie') {
+                const resource = new Resource(data.duration, 'N/A');
+                production = new Movie(
+                    data.title, data.publication, data.nationality,
+                    data.synopsis, data.image, resource, []
+                );
+            } else {
+                production = new Serie(
+                    data.title, data.publication, data.nationality,
+                    data.synopsis, data.image, [], [], data.seasons
+                );
+            }
+            system.addProduction(production);
+
+            // 2. Asignar categorías
+            for (const catName of data.categories) {
+                const cat = this._findCategoryByName(catName);
+                if (cat) {
+                    try { system.assignCategory(cat, production); } catch (e) { /* ya asignada */ }
+                }
+            }
+
+            // 3. Asignar director
+            const director = this._findDirectorByKey(data.director);
+            if (director) {
+                try { system.assignDirector(director, production); } catch (e) { /* ya asignado */ }
+            }
+
+            // 4. Asignar actores con su rol (firma del modelo: actor, prod, role, prod2, role2, ...)
+            for (const actorKey of data.actors) {
+                const actor = this._findActorByKey(actorKey);
+                if (actor) {
+                    try {
+                        system.assignActor(actor, production, data.roles[actorKey] || 'Sin especificar');
+                    } catch (e) { /* ya asignado */ }
+                }
+            }
+
+            this[VIEW].closeModal();
+            this[VIEW].showToast(`Producción "${production.title}" creada correctamente.`, 'success');
+            this._showProduction(production.title);
+        } catch (err) {
+            this[VIEW].showToast(`Error al crear la producción: ${err.message}`, 'error');
+        }
+    }
+
+    // ---- 2. ELIMINAR PRODUCCIÓN ----
+    handleOpenDeleteProductionForm = (preselectedTitle = null) => {
+        const system = this[MODEL];
+        const productions = [];
+        for (const p of system.productions) productions.push(p);
+
+        if (productions.length === 0) {
+            this[VIEW].showToast('No hay producciones para eliminar.', 'error');
+            return;
+        }
+
+        this[VIEW].showDeleteProductionForm(
+            { productions, preselectedTitle },
+            (data) => this.handleDeleteProduction(data)
+        );
+    }
+
+    handleDeleteProduction = (data) => {
+        const system = this[MODEL];
+        try {
+            const production = this._findProductionByTitle(data.title);
+            if (!production) throw new Error('Producción no encontrada.');
+
+            // Integridad referencial: desligar de categorías, directores y actores
+            for (const cat of system.categories) {
+                try { system.deassignCategory(cat, production); } catch (e) { /* no estaba */ }
+            }
+            for (const dir of system.directors) {
+                try { system.deassignDirector(dir, production); } catch (e) { /* no estaba */ }
+            }
+            for (const act of system.actors) {
+                try { system.deassignActor(act, production); } catch (e) { /* no estaba */ }
+            }
+
+            system.removeProduction(production);
+
+            this[VIEW].closeModal();
+            this[VIEW].showToast(`Producción "${data.title}" eliminada correctamente.`, 'success');
+            this.onInit();
+        } catch (err) {
+            this[VIEW].showToast(`Error al eliminar la producción: ${err.message}`, 'error');
+        }
+    }
+
+    // ---- 3. GESTIONAR REPARTO Y DIRECTOR ----
+    handleOpenCastForm = (preselectedTitle = null) => {
+        const system = this[MODEL];
+
+        const productions = [];
+        for (const p of system.productions) productions.push(p);
+
+        const allActors = [];
+        for (const a of system.actors) allActors.push(a);
+
+        const allDirectors = [];
+        for (const d of system.directors) allDirectors.push(d);
+
+        if (productions.length === 0) {
+            this[VIEW].showToast('No hay producciones disponibles.', 'error');
+            return;
+        }
+
+        const getProductionState = (title) => {
+            const prod = this._findProductionByTitle(title);
+            if (!prod) return { directorKey: null, cast: [] };
+
+            const dirs = this._getDirectorsOfProduction(prod);
+            const directorKey = dirs.length > 0 ? dirs[0].toString() : null;
+
+            const cast = [];
+            try {
+                for (const item of system.getCast(prod)) {
+                    cast.push({ actor: item.actor.toString(), role: item.role });
+                }
+            } catch (e) { /* sin cast */ }
+
+            return { directorKey, cast };
+        };
+
+        this[VIEW].showCastForm(
+            { productions, allActors, allDirectors, getProductionState, preselectedTitle },
+            (data) => this.handleUpdateCast(data)
+        );
+    }
+
+    handleUpdateCast = (data) => {
+        const system = this[MODEL];
+        try {
+            const production = this._findProductionByTitle(data.title);
+            if (!production) throw new Error('Producción no encontrada.');
+
+            // Estado actual
+            const dirs = this._getDirectorsOfProduction(production);
+            const currentDirectorKey = dirs.length > 0 ? dirs[0].toString() : null;
+            const currentCast = [];
+            try {
+                for (const item of system.getCast(production)) {
+                    currentCast.push({ actor: item.actor.toString(), role: item.role });
+                }
+            } catch (e) { /* sin cast */ }
+
+            // --- DIRECTOR ---
+            if (currentDirectorKey !== data.directorKey) {
+                if (currentDirectorKey) {
+                    const oldDir = this._findDirectorByKey(currentDirectorKey);
+                    if (oldDir) {
+                        try { system.deassignDirector(oldDir, production); } catch (e) { /* ignorar */ }
+                    }
+                }
+                if (data.directorKey) {
+                    const newDir = this._findDirectorByKey(data.directorKey);
+                    if (newDir) {
+                        try { system.assignDirector(newDir, production); } catch (e) { /* ya asignado */ }
+                    }
+                }
+            }
+
+            // --- ACTORES ---
+            const currentSet = new Set(currentCast.map(c => c.actor));
+            const desiredSet = new Set(data.actors.map(a => a.actor));
+            const desiredMap = new Map(data.actors.map(a => [a.actor, a.role]));
+
+            // Desasignar los que ya no están
+            for (const actorKey of currentSet) {
+                if (!desiredSet.has(actorKey)) {
+                    const actor = this._findActorByKey(actorKey);
+                    if (actor) {
+                        try { system.deassignActor(actor, production); } catch (e) { /* ignorar */ }
+                    }
+                }
+            }
+
+            // Asignar los nuevos / actualizar rol cambiado (firma: actor, prod, role)
+            for (const [actorKey, role] of desiredMap.entries()) {
+                const actor = this._findActorByKey(actorKey);
+                if (!actor) continue;
+                const currentItem = currentCast.find(c => c.actor === actorKey);
+
+                if (!currentItem) {
+                    try {
+                        system.assignActor(actor, production, role);
+                    } catch (e) { /* ignorar */ }
+                } else if (currentItem.role !== role) {
+                    // Cambio de rol: desasignar y reasignar
+                    try { system.deassignActor(actor, production); } catch (e) { /* ignorar */ }
+                    try { system.assignActor(actor, production, role); } catch (e) { /* ignorar */ }
+                }
+            }
+
+            this[VIEW].closeModal();
+            this[VIEW].showToast(`Reparto de "${production.title}" actualizado correctamente.`, 'success');
+            this._showProduction(production.title);
+        } catch (err) {
+            this[VIEW].showToast(`Error al actualizar el reparto: ${err.message}`, 'error');
+        }
     }
 }

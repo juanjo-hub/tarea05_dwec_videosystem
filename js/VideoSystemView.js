@@ -212,9 +212,17 @@ class VideoSystemView {
                     ${resourceHtml}
                     ${seasonsHtml}
                     <p class="ficha-synopsis">${production._synopsis || 'Sin sinopsis disponible.'}</p>
-                    <button class="btn-primary btn-open-window" data-type="production" data-title="${production.title}">
-                        <i class="fas fa-external-link-alt"></i> Abrir en ventana nueva
-                    </button>
+                    <div class="ficha-actions">
+                        <button class="btn-primary btn-open-window" data-type="production" data-title="${production.title}">
+                            <i class="fas fa-external-link-alt"></i> Abrir en ventana nueva
+                        </button>
+                        <button class="btn-secondary btn-cast-prod" data-title="${production.title}">
+                            <i class="fas fa-user-edit"></i> Gestionar reparto
+                        </button>
+                        <button class="btn-delete-icon btn-delete-prod" data-title="${production.title}" title="Eliminar producción">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         `;
@@ -597,22 +605,135 @@ class VideoSystemView {
         });
     }
 
-    /* TOAST NOTIFICATION*/
-    showToast(message) {
+    /* TOAST NOTIFICATION */
+    showToast(message, type = 'success') {
         const toast = document.createElement('div');
-        toast.classList.add('toast');
+        toast.classList.add('toast', `toast-${type}`);
         toast.textContent = message;
         document.body.append(toast);
 
-        // Forzar reflow y añadir clase 'show' para disparar la transición
         requestAnimationFrame(() => {
             toast.classList.add('show');
         });
 
-        // Quitar después de 3 segundos
         setTimeout(() => {
             toast.classList.remove('show');
             setTimeout(() => toast.remove(), 300);
         }, 3000);
+    }
+
+    /* ============================================================
+     *  MODAL Y FORMULARIOS (DWEC06)
+     * ============================================================ */
+
+    openModal(innerHTML) {
+        const modal = document.getElementById('modal');
+        const body = document.getElementById('modal-body');
+        body.innerHTML = innerHTML;
+        modal.classList.add('show');
+        document.body.classList.add('modal-open');
+    }
+
+    closeModal() {
+        const modal = document.getElementById('modal');
+        const body = document.getElementById('modal-body');
+        modal.classList.remove('show');
+        document.body.classList.remove('modal-open');
+        body.innerHTML = '';
+    }
+
+    showCreateProductionForm({ categories, actors, directors, existingTitles }, onSubmit) {
+        const html = VideoSystemForms.buildCreateProductionForm({
+            categorias: categories,
+            actores: actors,
+            directores: directors,
+        });
+        this.openModal(html);
+        const form = document.forms.fNewProduction;
+        VideoSystemForms.initCreateProductionForm(form, {
+            titulosExistentes: existingTitles,
+            alEnviar: onSubmit,
+        });
+    }
+
+    showDeleteProductionForm({ productions, preselectedTitle = null }, onSubmit) {
+        const html = VideoSystemForms.buildDeleteProductionForm({
+            producciones: productions,
+        });
+        this.openModal(html);
+        const form = document.forms.fDelProduction;
+        VideoSystemForms.initDeleteProductionForm(form, {
+            alEnviar: onSubmit,
+            tituloPreseleccionado: preselectedTitle,
+        });
+    }
+
+    showCastForm({ productions, allActors, allDirectors, getProductionState, preselectedTitle = null }, onSubmit) {
+        const html = VideoSystemForms.buildCastForm({
+            producciones: productions,
+            tituloPreseleccionado: preselectedTitle,
+        });
+        this.openModal(html);
+        const form = document.forms.fCast;
+        VideoSystemForms.initCastForm(form, {
+            todosLosActores: allActors,
+            todosLosDirectores: allDirectors,
+            obtenerEstadoProduccion: getProductionState,
+            alEnviar: onSubmit,
+            tituloPreseleccionado: preselectedTitle,
+        });
+    }
+
+    /* ---------- Bindings de los nuevos elementos UI ---------- */
+
+    // FAB "Nueva producción"
+    bindCreateProduction(handler) {
+        document.getElementById('fab-new-production').addEventListener('click', (event) => {
+            event.preventDefault();
+            handler();
+        });
+    }
+
+    // Botón "Eliminar" dentro de la ficha de producción
+    bindDeleteProduction(handler) {
+        this.main.addEventListener('click', (event) => {
+            const btn = event.target.closest('.btn-delete-prod');
+            if (btn) {
+                event.preventDefault();
+                handler(btn.dataset.title);
+            }
+        });
+    }
+
+    // Botón "Gestionar reparto" dentro de la ficha de producción
+    bindCastProduction(handler) {
+        this.main.addEventListener('click', (event) => {
+            const btn = event.target.closest('.btn-cast-prod');
+            if (btn) {
+                event.preventDefault();
+                handler(btn.dataset.title);
+            }
+        });
+    }
+
+    // Cerrar modal (botón X, click en el overlay, tecla Escape)
+    bindModalClose() {
+        const modal = document.getElementById('modal');
+        modal.addEventListener('click', (event) => {
+            // Si se hace clic en el botón X o en cualquier elemento dentro de él
+            if (event.target.closest('.modal-close')) {
+                this.closeModal();
+                return;
+            }
+            // Si se hace clic en el overlay (fondo oscuro)
+            if (event.target.matches('.modal-overlay')) {
+                this.closeModal();
+            }
+        });
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && modal.classList.contains('show')) {
+                this.closeModal();
+            }
+        });
     }
 }
