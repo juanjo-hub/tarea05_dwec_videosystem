@@ -35,12 +35,12 @@ header {
 
 .nav-container {
     max-width: 1200px;
-    margin: 0 0.5rem;
-    padding: 0 1rem;
+    margin: 0 auto;
+    padding: 0 1.25rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 4rem;
+    height: 5rem;
 }
 
 .nav-logo {
@@ -491,7 +491,8 @@ footer {
 }
 .btn-secondary:hover {
     background-color: #444c56;
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .btn-danger {
@@ -510,7 +511,8 @@ footer {
 }
 .btn-danger:hover {
     background-color: #b3261e;
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 /* Acciones agrupadas en la ficha de producción */
@@ -596,10 +598,10 @@ footer {
     border: 1px solid #30363d;
     border-radius: 14px;
     width: 100%;
-    max-width: 900px;
-    max-height: 90vh;
+    max-width: 1100px;
+    max-height: 95vh;
     overflow-y: auto;
-    padding: 2rem 1.6rem 1.6rem;
+    padding: 2rem 2rem 1.6rem;
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
     color: #e6edf3;
     animation: modalIn 0.25s ease-out;
@@ -889,8 +891,23 @@ textarea.form-control {
 .toast-error {
     background-color: #da3633;
 }
+.btn-favorite:hover {
+    border-color: #f5c518;
+    color: #f5c518;
+    background: rgba(245, 197, 24, 0.1);
+}
+.btn-favorite.is-fav {
+    border-color: #f5c518;
+    color: #f5c518;
+    background: rgba(245, 197, 24, 0.15);
+}
+.btn-favorite.is-fav:hover {
+    background: rgba(245, 197, 24, 0.05);
+    color: #cfcfcf;
+    border-color: rgba(255,255,255,0.25);
+}
 
-/* --- Responsive --- */
+
 @media (max-width: 768px) {
     .modal-content {
         max-width: 100%;
@@ -913,4 +930,203 @@ textarea.form-control {
         height: 52px;
         font-size: 1.4rem;
     }
+}
+
+/* --- Formulario nueva producción: grid 3 columnas (DWEC07 - Punto 10) --- */
+.vs-form-3col {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.8rem;
+}
+/* Sinopsis: 2 columnas | Mapa: 1 columna */
+.vs-form-3col .np-sinopsis { grid-column: span 2; }
+.vs-form-3col .np-mapa     { grid-column: span 1; }
+/* Casting: 2 columnas (la fila la completa Categorías que es 1 col) */
+.vs-form-3col .np-casting  { grid-column: span 2; }
+
+/* Reducir altura de selects multi para que quepa en el modal */
+.vs-form-3col select[multiple] {
+    max-height: 110px;
+}
+/* Reducir margen entre filas */
+.vs-form-3col .form-group {
+    margin-bottom: 0;
+}
+
+/* Responsive: tablet a 2 columnas, móvil a 1 */
+@media (max-width: 900px) {
+    .vs-form-3col {
+        grid-template-columns: 1fr 1fr;
+    }
+    .vs-form-3col .np-sinopsis,
+    .vs-form-3col .np-mapa,
+    .vs-form-3col .np-casting {
+        grid-column: span 2;
+    }
+}
+@media (max-width: 600px) {
+    .vs-form-3col {
+        grid-template-columns: 1fr;
+    }
+    .vs-form-3col .np-sinopsis,
+    .vs-form-3col .np-mapa,
+    .vs-form-3col .np-casting {
+        grid-column: span 1;
+    }
+}
+
+/* Botones del formulario: mismo tamaño y mismo efecto hover */
+.vs-form .form-actions .btn-primary,
+.vs-form-3col .form-actions .btn-primary,
+.vs-form .form-actions .btn-secondary,
+.vs-form-3col .form-actions .btn-secondary {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border-radius: 8px;
+    margin-top: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
+}
+.vs-form .form-actions .btn-primary:hover,
+.vs-form-3col .form-actions .btn-primary:hover {
+    background: #c53651;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+.vs-form .form-actions .btn-secondary:hover,
+.vs-form-3col .form-actions .btn-secondary:hover {
+    background-color: #444c56;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* --- Botón favorito - solo estrella (DWEC07 - Punto 5) --- */
+.btn-favorito {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background-color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
+    color: #cfcfcf;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+}
+.btn-favorito:hover {
+    border-color: #f5c518;
+    color: #f5c518;
+    background-color: rgba(245, 197, 24, 0.1);
+}
+.btn-favorito.es-favorito {
+    border-color: #f5c518;
+    color: #f5c518;
+    background-color: rgba(245, 197, 24, 0.12);
+}
+.btn-favorito.es-favorito:hover {
+    background-color: rgba(233, 69, 96, 0.1);
+    border-color: #e94560;
+    color: #e94560;
+}
+
+/* --- Botón backup (DWEC07 - Punto 9) --- */
+.btn-backup {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    background-color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 6px;
+    color: #cfcfcf;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-right: 0.5rem;
+    appearance: none;
+    -webkit-appearance: none;
+}
+.btn-backup:hover {
+    border-color: #e94560;
+    color: #e94560;
+    background-color: rgba(233, 69, 96, 0.1);
+}
+
+/* --- Geocoder en formulario nueva producción (DWEC07 - Punto 12) --- */
+.np-geocoder {
+    display: flex;
+    gap: 0.4rem;
+    margin-bottom: 0.5rem;
+}
+.np-geocoder #npAddress {
+    flex: 1;
+    padding: 0.45rem 0.7rem;
+    font-size: 0.85rem;
+}
+.np-search-btn {
+    padding: 0.45rem 0.8rem !important;
+    font-size: 0.85rem !important;
+    margin: 0 !important;
+    flex-shrink: 0;
+}
+
+.np-address-results {
+    margin-bottom: 0.5rem;
+    max-height: 110px;
+    overflow-y: auto;
+}
+.np-results-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+}
+.np-result-item {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.78rem;
+    color: #c9d1d9;
+    cursor: pointer;
+    border-bottom: 1px solid #21262d;
+    transition: background-color 0.15s;
+    line-height: 1.3;
+}
+.np-result-item:last-child {
+    border-bottom: none;
+}
+.np-result-item:hover {
+    background-color: rgba(233, 69, 96, 0.12);
+    color: #ffffff;
+}
+.np-result-item.active {
+    background-color: rgba(233, 69, 96, 0.25);
+    color: #ffffff;
+    font-weight: 500;
+}
+.np-result-item i {
+    color: #e94560;
+    margin-right: 0.3rem;
+}
+.np-loading,
+.np-empty,
+.np-error {
+    font-size: 0.78rem;
+    margin: 0.4rem 0;
+    color: #8b949e;
+}
+.np-error {
+    color: #f85149;
+}
+.np-error i {
+    margin-right: 0.3rem;
 }

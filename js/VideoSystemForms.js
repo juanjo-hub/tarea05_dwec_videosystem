@@ -1,6 +1,6 @@
 "use strict";
 
-/*   VideoSystemForms.js  (DWEC06) Generación y validación de los 3 formularios de la práctica.*/
+/* VideoSystemForms.js  (DWEC06) Generación y validación de los 3 formularios de la práctica.*/
 
 class VideoSystemForms {
 
@@ -12,14 +12,14 @@ class VideoSystemForms {
         // Limpiamos las clases de validación previas
         campo.classList.remove('is-valid', 'is-invalid');
 
-        // Añadimos la clase que corresponda según sea válido o no
+        //Añadimos la clase que corresponda según sea válido o no
         if (esValido) {
             campo.classList.add('is-valid');
         } else {
             campo.classList.add('is-invalid');
         }
 
-        // Buscamos el contenedor (form-group) que envuelve al campo
+        //Buscamos el contenedor (form-group) que envuelve al campo
         const contenedor = campo.closest('.form-group') || campo.parentElement;
         if (!contenedor) return;
 
@@ -27,13 +27,13 @@ class VideoSystemForms {
         const divValido = contenedor.querySelector('.valid-feedback');
         const divInvalido = contenedor.querySelector('.invalid-feedback');
 
-        // Mostramos u ocultamos el mensaje verde
+        //Mostramos u ocultamos el mensaje verde
         if (divValido) {
             divValido.classList.toggle('d-block', esValido);
             divValido.classList.toggle('d-none', !esValido);
         }
 
-        // Mostramos u ocultamos el mensaje rojo
+        //Mostramos u ocultamos el mensaje rojo
         if (divInvalido) {
             divInvalido.classList.toggle('d-block', !esValido);
             divInvalido.classList.toggle('d-none', esValido);
@@ -41,8 +41,7 @@ class VideoSystemForms {
         }
     }
 
-    /**Limpia toda la retroalimentación de un formulario.
-     * Quita los bordes verdes/rojos y oculta todos los mensajes.*/
+    /*Limpia toda la retroalimentación de un formulario. Quita los bordes verdes/rojos y oculta todos los mensajes*/
     static resetFeedback(formulario) {
         for (const campo of formulario.querySelectorAll('.is-valid, .is-invalid')) {
             campo.classList.remove('is-valid', 'is-invalid');
@@ -53,11 +52,8 @@ class VideoSystemForms {
         }
     }
 
-    /**
-     * Validación en línea genérica: se asocia al evento change de los campos.
-     * Cuando el usuario cambia el valor de un campo, comprueba si es válido
-     * y muestra el feedback correspondiente.
-     */
+    /* Validación en línea genérica: se asocia al evento change de los campos
+     * Cuando el usuario cambia el valor de un campo, comprueba si es válido y muestra el feedback correspondiente*/
     static defaultCheckElement(evento) {
         const campo = evento.currentTarget;
         if (typeof campo.value === 'string') campo.value = campo.value.trim();
@@ -66,7 +62,6 @@ class VideoSystemForms {
 
 
     /* FORMULARIO 1 – CREAR PRODUCCIÓN*/
-
     static buildCreateProductionForm({ categorias, actores, directores }) {
 
         // Preparamos las opciones <option> para cada <select>
@@ -84,10 +79,10 @@ class VideoSystemForms {
             .join('');
 
         return `
-        <form name="fNewProduction" novalidate class="vs-form">
+        <form name="fNewProduction" novalidate class="vs-form vs-form-3col">
             <h2 class="form-title"><i class="fas fa-plus-circle"></i> Nueva producción</h2>
 
-            <!-- Tipo de producción (Película o Serie) -->
+            <!-- Tipo de producción ocupa las 3 columnas -->
             <div class="form-group form-group-full">
                 <label class="form-label">Tipo de producción *</label>
                 <div class="radio-row">
@@ -104,94 +99,111 @@ class VideoSystemForms {
                 <div class="valid-feedback d-none">Correcto.</div>
             </div>
 
-            <!-- Título -->
+            <!-- Fila: Título | Fecha | Nacionalidad -->
             <div class="form-group">
                 <label class="form-label" for="npTitle">Título *</label>
                 <input type="text" id="npTitle" name="npTitle" class="form-control"
                        required minlength="2" maxlength="80" placeholder="Ej. El Padrino">
-                <div class="invalid-feedback d-none">El título es obligatorio (2-80 caracteres) y debe ser único.</div>
+                <div class="invalid-feedback d-none">Obligatorio (2-80 caracteres) y único.</div>
                 <div class="valid-feedback d-none">Correcto.</div>
             </div>
 
-            <!-- Fecha de publicación -->
             <div class="form-group">
                 <label class="form-label" for="npDate">Fecha de publicación *</label>
                 <input type="date" id="npDate" name="npDate" class="form-control"
                        required min="1900-01-01" max="${new Date().toISOString().split('T')[0]}">
-                <div class="invalid-feedback d-none">Introduce una fecha válida (entre 1900 y hoy).</div>
+                <div class="invalid-feedback d-none">Fecha válida (1900 – hoy).</div>
                 <div class="valid-feedback d-none">Correcto.</div>
             </div>
 
-            <!-- Nacionalidad -->
             <div class="form-group">
                 <label class="form-label" for="npNat">Nacionalidad</label>
                 <input type="text" id="npNat" name="npNat" class="form-control"
-                       maxlength="40" placeholder="Ej. Estados Unidos">
+                       maxlength="40" placeholder="Ej. USA">
                 <div class="invalid-feedback d-none">Nacionalidad no válida.</div>
                 <div class="valid-feedback d-none">Correcto.</div>
             </div>
 
-            <!-- Imagen (URL) -->
-            <div class="form-group">
-                <label class="form-label" for="npImage">URL de la imagen</label>
-                <input type="url" id="npImage" name="npImage" class="form-control"
-                       placeholder="https://...jpg" pattern="https?://.+\\.(jpg|jpeg|png|gif|webp)(\\?.*)?$">
-                <div class="invalid-feedback d-none">Debe ser una URL válida que apunte a una imagen (jpg, png, gif, webp).</div>
-                <div class="valid-feedback d-none">Correcto.</div>
-            </div>
-
-            <!-- Director -->
+            <!-- Fila: Director | Duración/Temporadas | URL imagen -->
             <div class="form-group">
                 <label class="form-label" for="npDirector">Director *</label>
                 <select id="npDirector" name="npDirector" class="form-control" required>
-                    <option value="">-- Selecciona un director --</option>
+                    <option value="">-- Selecciona --</option>
                     ${opcionesDirectores}
                 </select>
-                <div class="invalid-feedback d-none">Debes seleccionar un director.</div>
+                <div class="invalid-feedback d-none">Selecciona un director.</div>
                 <div class="valid-feedback d-none">Correcto.</div>
             </div>
 
-            <!-- Sinopsis (ocupa 2 columnas) -->
-            <div class="form-group form-group-full">
+            <div class="form-group" data-only="Movie">
+                <label class="form-label" for="npDuration">Duración (min) *</label>
+                <input type="number" id="npDuration" name="npDuration" class="form-control"
+                       min="1" max="600" step="1" placeholder="Ej. 120">
+                <div class="invalid-feedback d-none">Entre 1 y 600 minutos.</div>
+                <div class="valid-feedback d-none">Correcto.</div>
+            </div>
+
+            <div class="form-group" data-only="Serie" style="display:none;">
+                <label class="form-label" for="npSeasons">Temporadas *</label>
+                <input type="number" id="npSeasons" name="npSeasons" class="form-control"
+                       min="1" max="50" step="1" placeholder="Ej. 5">
+                <div class="invalid-feedback d-none">Entre 1 y 50 temporadas.</div>
+                <div class="valid-feedback d-none">Correcto.</div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="npImage">URL imagen</label>
+                <input type="url" id="npImage" name="npImage" class="form-control"
+                       placeholder="https://...jpg" pattern="https?://.+\\.(jpg|jpeg|png|gif|webp)(\\?.*)?$">
+                <div class="invalid-feedback d-none">URL de imagen válida (jpg, png, gif, webp).</div>
+                <div class="valid-feedback d-none">Correcto.</div>
+            </div>
+
+            <!-- Fila: Sinopsis (2 cols) + Mapa (1 col) -->
+            <div class="form-group np-sinopsis">
                 <label class="form-label" for="npSynopsis">Sinopsis</label>
                 <textarea id="npSynopsis" name="npSynopsis" class="form-control"
-                          rows="3" maxlength="500" placeholder="Breve sinopsis..."></textarea>
+                          rows="4" maxlength="500" placeholder="Breve sinopsis..."></textarea>
                 <div class="invalid-feedback d-none">Sinopsis no válida.</div>
                 <div class="valid-feedback d-none">Correcto.</div>
             </div>
 
-            <!-- Campo dinámico Movie: duración -->
-            <div class="form-group" data-only="Movie">
-                <label class="form-label" for="npDuration">Duración (minutos) *</label>
-                <input type="number" id="npDuration" name="npDuration" class="form-control"
-                       min="1" max="600" step="1" placeholder="Ej. 120">
-                <div class="invalid-feedback d-none">La duración debe ser un número entre 1 y 600 minutos.</div>
-                <div class="valid-feedback d-none">Correcto.</div>
+            <div class="form-group np-mapa">
+                <label class="form-label">
+                    <i class="fas fa-map-marker-alt"></i> Localización <small>(opcional)</small>
+                </label>
+                <!-- DWEC07 - Punto 12: Geocoder con Nominatim/OSM -->
+                <div class="np-geocoder">
+                    <input type="text" id="npAddress" class="form-control"
+                           placeholder="Buscar dirección..." autocomplete="off">
+                    <button type="button" id="npSearchBtn" class="btn-secondary np-search-btn"
+                            title="Buscar dirección">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                <div id="npAddressResults" class="np-address-results"></div>
+                <div id="np-map" style="height:140px; border:1px solid #3d2858; border-radius:6px; margin-bottom:0.4rem;"></div>
+                <div style="display:flex; gap:0.8rem; font-size:0.78rem; color:#cfcfcf;">
+                    <span>Lat: <strong id="np-lat-display">—</strong></span>
+                    <span>Lng: <strong id="np-lng-display">—</strong></span>
+                </div>
+                <input type="hidden" id="npLat" name="npLat" value="">
+                <input type="hidden" id="npLng" name="npLng" value="">
             </div>
 
-            <!-- Campo dinámico Serie: temporadas -->
-            <div class="form-group" data-only="Serie" style="display:none;">
-                <label class="form-label" for="npSeasons">Número de temporadas *</label>
-                <input type="number" id="npSeasons" name="npSeasons" class="form-control"
-                       min="1" max="50" step="1" placeholder="Ej. 5">
-                <div class="invalid-feedback d-none">El número de temporadas debe estar entre 1 y 50.</div>
-                <div class="valid-feedback d-none">Correcto.</div>
-            </div>
-
-            <!-- Categorías (selección múltiple, ocupa 2 columnas) -->
-            <div class="form-group form-group-full">
-                <label class="form-label" for="npCategories">Categorías * <small>(Ctrl/Cmd para múltiple)</small></label>
+            <!-- Fila: Categorías | Casting (2 cols) -->
+            <div class="form-group">
+                <label class="form-label" for="npCategories">Categorías * <small>(Ctrl)</small></label>
                 <select id="npCategories" name="npCategories" class="form-control" multiple required size="4">
                     ${opcionesCategorias}
                 </select>
-                <div class="invalid-feedback d-none">Selecciona al menos una categoría.</div>
+                <div class="invalid-feedback d-none">Selecciona al menos una.</div>
                 <div class="valid-feedback d-none">Correcto.</div>
             </div>
 
-            <!-- Casting: actores + roles (ocupa 2 columnas) -->
-            <div class="form-group form-group-full">
-                <label class="form-label" for="npActors">Casting * <small>(Ctrl/Cmd para múltiple)</small></label>
-                <select id="npActors" name="npActors" class="form-control" multiple required size="5">
+            <div class="form-group np-casting">
+                <label class="form-label" for="npActors">Casting * <small>(Ctrl)</small></label>
+                <select id="npActors" name="npActors" class="form-control" multiple required size="4">
                     ${opcionesActores}
                 </select>
                 <div class="invalid-feedback d-none">Selecciona al menos un actor.</div>
@@ -243,7 +255,7 @@ class VideoSystemForms {
         }
         actualizarCamposDinamicos();
 
-        /* Validación personalizada del título: que sea único */
+        /*Validación personalizada del título: que sea único */
         const campoTitulo = formulario.npTitle;
 
         campoTitulo.addEventListener('change', () => {
@@ -346,6 +358,12 @@ class VideoSystemForms {
                 datos.seasons = parseInt(formulario.npSeasons.value, 10);
             }
 
+            // DWEC07 - Punto 10: recoger coordenadas del mapa picker
+            if (formulario.npLat.value && formulario.npLng.value) {
+                datos.lat = parseFloat(formulario.npLat.value);
+                datos.lng = parseFloat(formulario.npLng.value);
+            }
+
             alEnviar(datos);
         });
 
@@ -354,12 +372,135 @@ class VideoSystemForms {
             VideoSystemForms.resetFeedback(formulario);
             contenedorRoles.innerHTML = '';
             setTimeout(actualizarCamposDinamicos, 0);
+            // Limpiar coordenadas al resetear
+            formulario.npLat.value = '';
+            formulario.npLng.value = '';
+            const latDisplay = document.getElementById('np-lat-display');
+            const lngDisplay = document.getElementById('np-lng-display');
+            if (latDisplay) latDisplay.textContent = '—';
+            if (lngDisplay) lngDisplay.textContent = '—';
+            if (marcador) {
+                marcador.remove();
+                marcador = null;
+            }
+        });
+
+        //DWEC07 - Punto 10.Inicializar mapa picker
+        let marcador = null;
+
+        const mapaInicial = [38.990831799999995, -3.9206173000000004];
+
+        const mapaPicker = L.map('np-map').setView(mapaInicial, 13);
+
+        L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+            maxZoom: 18
+        }).addTo(mapaPicker);
+
+        //Al hacer clic en el mapa se guarda la posición en los inputs ocultos.
+        //event.latlng.lat / event.latlng.lng
+        mapaPicker.on('click', function (event) {
+            const lat = event.latlng.lat;
+            const lng = event.latlng.lng;
+
+            formulario.npLat.value = lat;
+            formulario.npLng.value = lng;
+
+            document.getElementById('np-lat-display').textContent = lat.toFixed(6);
+            document.getElementById('np-lng-display').textContent = lng.toFixed(6);
+
+            if (marcador) {
+                marcador.setLatLng([lat, lng]);
+            } else {
+                marcador = L.marker([lat, lng]).addTo(mapaPicker);
+            }
+            marcador.bindPopup('Localización seleccionada').openPopup();
+        });
+
+        //DWEC07 Punto 12.Geocoder con Nominatim
+        //Al pulsar el botón de búsqueda construimos la URL con searchParams
+        const inputDireccion = document.getElementById('npAddress');
+        const botonBuscar = document.getElementById('npSearchBtn');
+        const contenedorResultados = document.getElementById('npAddressResults');
+
+        // Función auxiliar que coloca un resultado en el mapa
+        const seleccionarResultado = (lat, lng, displayName) => {
+            // Mover vista y marcador
+            mapaPicker.setView([lat, lng], 14);
+            if (marcador) {
+                marcador.setLatLng([lat, lng]);
+            } else {
+                marcador = L.marker([lat, lng]).addTo(mapaPicker);
+            }
+            marcador.bindPopup(displayName).openPopup();
+
+            // Actualizar inputs ocultos y display
+            formulario.npLat.value = lat;
+            formulario.npLng.value = lng;
+            document.getElementById('np-lat-display').textContent = parseFloat(lat).toFixed(6);
+            document.getElementById('np-lng-display').textContent = parseFloat(lng).toFixed(6);
+        };
+
+        const buscarDireccion = () => {
+            const consulta = inputDireccion.value.trim();
+            if (!consulta) return;
+
+            //Construye URL con URL + searchParams
+            const url = new URL('https://nominatim.openstreetmap.org/search');
+            url.searchParams.append('format', 'json');
+            url.searchParams.append('limit', 5);
+            url.searchParams.append('q', consulta);
+
+            contenedorResultados.innerHTML = '<p class="np-loading"><i class="fas fa-spinner fa-spin"></i> Buscando...</p>';
+
+            fetch(url, { method: 'get' })
+                .then((response) => response.json())
+                .then((data) => {
+                    contenedorResultados.replaceChildren();
+                    if (data.length === 0) {
+                        contenedorResultados.innerHTML = '<p class="np-empty">No se encontraron resultados.</p>';
+                        return;
+                    }
+                    //Mostrar lista de resultados clicables
+                    const lista = document.createElement('ul');
+                    lista.classList.add('np-results-list');
+                    data.forEach((direccion) => {
+                        const item = document.createElement('li');
+                        item.classList.add('np-result-item');
+                        item.dataset.lat = direccion.lat;
+                        item.dataset.lon = direccion.lon;
+                        item.innerHTML = `<i class="fas fa-map-pin"></i> ${direccion.display_name}`;
+                        item.addEventListener('click', () => {
+                            seleccionarResultado(direccion.lat, direccion.lon, direccion.display_name);
+                            // Marcar visualmente el seleccionado
+                            lista.querySelectorAll('.np-result-item').forEach(li => li.classList.remove('active'));
+                            item.classList.add('active');
+                        });
+                        lista.append(item);
+                    });
+                    contenedorResultados.append(lista);
+
+                    //Recalcular tamaño del mapa por si seguía oculto
+                    setTimeout(() => mapaPicker.invalidateSize(), 100);
+                })
+                .catch(() => {
+                    contenedorResultados.innerHTML = '<p class="np-error"><i class="fas fa-exclamation-circle"></i> No se ha podido conectar con el servidor de mapas.</p>';
+                });
+        };
+
+        botonBuscar.addEventListener('click', buscarDireccion);
+
+        //Permitir buscar también pulsando Enter en el input (sin enviar el formulario)
+        inputDireccion.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                buscarDireccion();
+            }
         });
     }
 
 
     /* FORMULARIO 2 – ELIMINAR PRODUCCIÓN */
-
     static buildDeleteProductionForm({ producciones }) {
         const opcionesProducciones = producciones
             .map(produccion => `<option value="${produccion.title}">${produccion.toString()}</option>`)
@@ -405,7 +546,7 @@ class VideoSystemForms {
         `;
     }
 
-    /* Inicializa los event listeners del formulario de eliminar producción.*/
+    /*Inicializa los event listeners del formulario*/
     static initDeleteProductionForm(formulario, opciones) {
         const { alEnviar, tituloPreseleccionado } = opciones;
 
@@ -513,7 +654,7 @@ class VideoSystemForms {
         `;
     }
 
-    /* Inicializa los event listeners del formulario de gestión de reparto.*/
+    /*Inicializa los event listeners del formulario*/
     static initCastForm(formulario, opciones) {
         const { todosLosActores, todosLosDirectores, obtenerEstadoProduccion,
                 alEnviar, tituloPreseleccionado } = opciones;
@@ -523,7 +664,7 @@ class VideoSystemForms {
         const selectDirector = formulario.cfDirector;
         const listaActores = formulario.querySelector('#cfActorsList');
 
-        // Rellenamos el select de directores
+        //Rellenamos el select de directores
         for (const director of todosLosDirectores) {
             const opcion = document.createElement('option');
             opcion.value = director.toString();
@@ -531,7 +672,7 @@ class VideoSystemForms {
             selectDirector.append(opcion);
         }
 
-        // Renderiza la checklist de actores para una producción
+        //Renderiza la checklist de actores para una producción
         const renderizarActores = (estadoProduccion) => {
             listaActores.innerHTML = '';
 
@@ -571,7 +712,7 @@ class VideoSystemForms {
             });
         };
 
-        // Carga los datos de una producción en el formulario
+        //Carga los datos de una producción en el formulario
         const cargarDatosProduccion = (titulo) => {
             if (!titulo) {
                 seccionDirector.style.display = 'none';

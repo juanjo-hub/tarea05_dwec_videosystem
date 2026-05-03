@@ -2,23 +2,37 @@
 
 const MODEL = Symbol('VideoSystemModel');
 const VIEW = Symbol('VideoSystemView');
+const USER = Symbol('AuthenticatedUser'); // DWEC07 - Punto 2
 
 class VideoSystemController {
     constructor(modelVideoSystem, viewVideoSystem) {
         this[MODEL] = modelVideoSystem;
         this[VIEW] = viewVideoSystem;
+        this[USER] = null; // suario autenticado actual (DWEC07)
 
-        // Array para almacenar referencias de ventanas abiertas
+        //Array para almacenar referencias de ventanas abiertas
         this._openedWindows = [];
         this._firstLoad = true;
 
-        // Enlazar handlers con la vista
+        //DWEC07 Punto 1. Aviso de uso de cookies
+        // Si el usuario no ha aceptado previamente el uso de cookies, mostramos el toast al inicio de la aplicación.
+        if (getCookie('acceptedCookieMessage') !== 'true') {
+            this[VIEW].showCookiesMessage();
+            this[VIEW].bindCookiesMessage(
+                this.handleAcceptCookies,
+                this.handleDenyCookies,
+            );
+        }
+
+        //Enlazar handlers con la vista
         this[VIEW].bindInit(this.handleInit);
         this[VIEW].bindCategoryCards(this.handleShowCategory);
         this[VIEW].bindCategoryMenu(this.handleShowCategory);
         this[VIEW].bindProductionCards(this.handleShowProduction);
         this[VIEW].bindActors(this.handleShowActors);
         this[VIEW].bindDirectors(this.handleShowDirectors);
+        //DWEC07 Punto 13. enlace al mapa global
+        this[VIEW].bindGlobalMap(this.handleShowGlobalMap);
         this[VIEW].bindPersonClick(this.handleShowPerson);
         this[VIEW].bindBreadcrumbHome(this.handleInit);
         this[VIEW].bindBreadcrumbActors(this.handleShowActors);
@@ -27,18 +41,23 @@ class VideoSystemController {
         this[VIEW].bindCloseWindows(this.handleCloseWindows);
         this[VIEW].bindMenuToggle();
 
-        // Bindings de formularios (DWEC06)
+        //Bindings de formularios (DWEC06)
         this[VIEW].bindCreateProduction(this.handleOpenCreateProductionForm);
         this[VIEW].bindDeleteProduction(this.handleOpenDeleteProductionForm);
         this[VIEW].bindCastProduction(this.handleOpenCastForm);
         this[VIEW].bindModalClose();
 
-        // Gestión de history - popstate
+        // DWEC07 Punto 5.Favoritos
+        // El bind se registra una vez aquí (igual que los demás binds del constructor) y delega el click al manejador que controla la seguridad.
+        this[VIEW].bindFavoritoBtn(this.handleFavorito);
+
+
+        //Gestión de history
         window.addEventListener('popstate', (event) => {
             if (event.state) {
                 this._restoreState(event.state);
             } else {
-                this.onInit(false); // false = no push history
+                this.onInit(false);
             }
         });
     }
@@ -50,7 +69,7 @@ class VideoSystemController {
             allProductions.push(prod);
         }
 
-        // Barajar (Fisher-Yates)
+        //Barajar (Fisher-Yates)
         for (let i = allProductions.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [allProductions[i], allProductions[j]] = [allProductions[j], allProductions[i]];
@@ -137,6 +156,12 @@ class VideoSystemController {
             case 'directorDetail':
                 this._showPerson(state.personKey, 'director', false);
                 break;
+            case 'favorites':
+                this._showFavorites(false);
+                break;
+            case 'globalMap':
+                this._showGlobalMap(false);
+                break;
         }
     }
 
@@ -191,6 +216,18 @@ class VideoSystemController {
         const directors = this._getDirectorsOfProduction(production);
 
         this[VIEW].showProductionDetail(production, cast, directors);
+
+        // DWEC07 - Punto 5: Si hay usuario autenticado, mostrar el botón de favorito.
+        // Patrón del profesor: onOpenSession() muestra elementos extra al autenticarse.
+        // Aquí hacemos lo mismo cada vez que se muestra una ficha de producción.
+        if (this[USER]) {
+            this[VIEW].showFavoriteButton(production.title, isFavorite(production.title));
+        }
+
+        // DWEC07 - Punto 11: si la producción tiene coordenadas, mostrar el mapa
+        if (production._lat !== undefined && production._lng !== undefined) {
+            this[VIEW].showProductionMap(production.title, production._lat, production._lng);
+        }
 
         if (pushHistory) {
             this._pushHistory({ action: 'production', productionTitle: productionTitle });
@@ -403,7 +440,8 @@ class VideoSystemController {
 
         // Actores
         for (const actData of data.actors) {
-            const actor = system.createPerson(actData.name, actData.lastname1, actData.born, actData.lastname2 || '', actData.picture || '');
+            const born = actData.born instanceof Date ? actData.born : new Date(actData.born);
+            const actor = system.createPerson(actData.name, actData.lastname1, born, actData.lastname2 || '', actData.picture || '');
             if (!system._actors.has(actor.toString())) {
                 system.addActor(actor);
             }
@@ -411,7 +449,8 @@ class VideoSystemController {
 
         // Directores
         for (const dirData of data.directors) {
-            const director = system.createPerson(dirData.name, dirData.lastname1, dirData.born, dirData.lastname2 || '', dirData.picture || '');
+            const born = dirData.born instanceof Date ? dirData.born : new Date(dirData.born);
+            const director = system.createPerson(dirData.name, dirData.lastname1, born, dirData.lastname2 || '', dirData.picture || '');
             if (!system._directors.has(director.toString())) {
                 system.addDirector(director);
             }
@@ -419,12 +458,19 @@ class VideoSystemController {
 
         // Producciones
         for (const prodData of data.productions) {
+            const publication = prodData.publication instanceof Date ? prodData.publication : new Date(prodData.publication);
             let production;
             if (prodData.type === 'Movie') {
-                const resource = prodData.resource ? new Resource(prodData.resource.duration, prodData.resource.link) : null;
-                production = new Movie(prodData.title, prodData.publication, prodData.nationality, prodData.synopsis, prodData.image, resource);
+                // En el JSON la duración viene como 'duration' directamente (no anidada en resource)
+                const resource = prodData.duration ? new Resource(prodData.duration, prodData.link || '') : (prodData.resource ? new Resource(prodData.resource.duration, prodData.resource.link) : null);
+                production = new Movie(prodData.title, publication, prodData.nationality, prodData.synopsis, prodData.image, resource);
             } else {
-                production = new Serie(prodData.title, prodData.publication, prodData.nationality, prodData.synopsis, prodData.image, [], [], prodData.seasons || 0);
+                production = new Serie(prodData.title, publication, prodData.nationality, prodData.synopsis, prodData.image, [], [], prodData.seasons || 0);
+            }
+            // DWEC07 - Punto 11: recuperar coordenadas guardadas si existen
+            if (prodData.lat !== undefined && prodData.lng !== undefined) {
+                production._lat = prodData.lat;
+                production._lng = prodData.lng;
             }
             if (!system._productions.has(production.title)) {
                 system.addProduction(production);
@@ -474,15 +520,43 @@ class VideoSystemController {
             } catch (e) { /* ignorar */ }
         }
 
+        //DWEC07 - Punto 3: Lectura inicial de la cookie de sesión. Si existe la cookie 'activeUser' y el usuario sigue dado de alta en el modelo, lo recuperamos y abrimos sesión sin pedirel formulario. En caso contrario, se muestra el botón de
+        // "Iniciar sesión" en el header.
+        const username = getCookie('activeUser');
+        if (username) {
+            const user = this[MODEL].getUser(username);
+            if (user) {
+                this[USER] = user;
+                this[VIEW].showAuthUserBadge(user.username);
+                this[VIEW].bindLogout(this.handleLogout);
+                // Punto 6: recuperar menú favoritos si había sesión guardada
+                this[VIEW].showFavoritesMenu();
+                this[VIEW].bindFavorites(this.handleShowFavorites);
+                // Punto 9: recuperar botón backup si había sesión guardada
+                this[VIEW].showBackupBtn();
+                this[VIEW].bindBackupBtn(this.handleBackup);
+            } else {
+                // La cookie apunta a un usuario que ya no existe → limpiamos
+                deleteCookie('activeUser');
+                this._renderLoggedOutHeader();
+            }
+        } else {
+            this._renderLoggedOutHeader();
+        }
+
         // Re-renderizar inicio
         this.onInit();
     }
 
-    /* ============================================================
-     *  HANDLERS DE FORMULARIOS (DWEC06)
-     * ============================================================ */
+    /*GESTIÓN DEL HEADER DE AUTENTICACIÓN (DWEC07)*/
+    /*botón "Iniciar sesión" en el header y lo enlaza */
+    _renderLoggedOutHeader() {
+        this[VIEW].showLoginLink();
+        this[VIEW].bindLoginLink(this.handleLoginForm);
+    }
 
-    // ---- 1. CREAR PRODUCCIÓN ----
+    /*  HANDLERS DE FORMULARIOS (DWEC06) */
+    // 1. CREAR PRODUCCIÓN
     handleOpenCreateProductionForm = () => {
         const system = this[MODEL];
 
@@ -547,6 +621,13 @@ class VideoSystemController {
                 }
             }
 
+            // DWEC07 - Punto 10: guardar coordenadas si se seleccionó localización
+            if (data.lat !== undefined && data.lng !== undefined) {
+                production._lat = data.lat;
+                production._lng = data.lng;
+            }
+
+            // Cerrar el modal antes de mostrar la ficha
             this[VIEW].closeModal();
             this[VIEW].showToast(`Producción "${production.title}" creada correctamente.`, 'success');
             this._showProduction(production.title);
@@ -555,7 +636,7 @@ class VideoSystemController {
         }
     }
 
-    // ---- 2. ELIMINAR PRODUCCIÓN ----
+    //2. ELIMINAR PRODUCCIÓN
     handleOpenDeleteProductionForm = (preselectedTitle = null) => {
         const system = this[MODEL];
         const productions = [];
@@ -591,7 +672,6 @@ class VideoSystemController {
 
             system.removeProduction(production);
 
-            this[VIEW].closeModal();
             this[VIEW].showToast(`Producción "${data.title}" eliminada correctamente.`, 'success');
             this.onInit();
         } catch (err) {
@@ -599,7 +679,7 @@ class VideoSystemController {
         }
     }
 
-    // ---- 3. GESTIONAR REPARTO Y DIRECTOR ----
+    //3. GESTIONAR REPARTO Y DIRECTOR
     handleOpenCastForm = (preselectedTitle = null) => {
         const system = this[MODEL];
 
@@ -656,7 +736,7 @@ class VideoSystemController {
                 }
             } catch (e) { /* sin cast */ }
 
-            // --- DIRECTOR ---
+            //DIRECTOR
             if (currentDirectorKey !== data.directorKey) {
                 if (currentDirectorKey) {
                     const oldDir = this._findDirectorByKey(currentDirectorKey);
@@ -672,7 +752,7 @@ class VideoSystemController {
                 }
             }
 
-            // --- ACTORES ---
+            //ACTORES
             const currentSet = new Set(currentCast.map(c => c.actor));
             const desiredSet = new Set(data.actors.map(a => a.actor));
             const desiredMap = new Map(data.actors.map(a => [a.actor, a.role]));
@@ -704,11 +784,225 @@ class VideoSystemController {
                 }
             }
 
-            this[VIEW].closeModal();
             this[VIEW].showToast(`Reparto de "${production.title}" actualizado correctamente.`, 'success');
             this._showProduction(production.title);
         } catch (err) {
             this[VIEW].showToast(`Error al actualizar el reparto: ${err.message}`, 'error');
         }
+    }
+
+    /* HANDLERS DE COOKIES (DWEC07 - Punto 1) */
+    /*Se ejecuta cuando el usuario pulsa "Aceptar" en el aviso de cookies. Guarda una cookie "acceptedCookieMessage=true" que se mantendrá durante un año, de forma que el aviso no vuelva a mostrarse hasta que expire o el usuario borre sus cookies*/
+    handleAcceptCookies = () => {
+        setCookie('acceptedCookieMessage', 'true', 365);
+        this[VIEW].hideCookiesMessage();
+        this[VIEW].showToast('Has aceptado el uso de cookies.', 'success');
+    }
+
+    /*Se ejecuta cuando el usuario pulsa "Denegar" o cierra el aviso. No se guarda ninguna cookie (volverá a aparecer la próxima vez) y se bloquea el contenido de la página mostrand un mensaje que indica que debe aceptar para continuar*/
+    handleDenyCookies = () => {
+        this[VIEW].hideCookiesMessage();
+        this[VIEW].showCookiesDeniedMessage();
+    }
+
+    /* HANDLERS DE AUTENTICACIÓN DWEC07Puntos 2, 3 y 4)*/
+
+    /* Muestra el formulario de login en el <main> al pulsar el botón "Iniciar sesión" del header.*/
+    handleLoginForm = () => {
+        this[VIEW].showLoginForm();
+        this[VIEW].bindLoginForm(this.handleLogin);
+    }
+
+    /**
+     * Comprueba las credenciales que ha enviado el usuario.
+     * - Si son válidas: guarda al usuario en el controlador, deja
+     *   la cookie 'activeUser' (7 días) y dispara onOpenSession().
+     * - Si son inválidas: muestra el mensaje de error.
+     * @param {string} username  Usuario introducido en el form.
+     * @param {string} password  Contraseña introducida.*/
+    handleLogin = (username, password) => {
+        if (this[MODEL].validateUser(username, password)) {
+            this[USER] = this[MODEL].getUser(username);
+            // DWEC07 - Punto 2: dejamos la cookie con duración 7 días
+            setCookie('activeUser', this[USER].username, 7);
+            this.onOpenSession();
+        } else {
+            this[VIEW].showInvalidLoginMessage();
+        }
+    }
+
+    /*Cierra la sesión actual: borra la cookie y restablece el estado del header. Vuelve al inicio*/
+    handleLogout = () => {
+        const username = this[USER] ? this[USER].username : '';
+        this.onCloseSession();
+        this[VIEW].showToast(
+            `Sesión cerrada${username ? `, ¡hasta pronto ${username}!` : '.'}`,
+            'success'
+        );
+    }
+
+
+    //DWEC07 - Punto 5: Manejador del botón favorito
+    //Si no hay usuario autenticado, no se ejecuta la acción
+    handleFavorito = (title) => {
+        if (!this[USER]) return; // seguridad: solo usuarios autenticados
+
+        const favs = getFavorites();
+        const yaEsFavorito = favs.includes(title);
+
+        if (yaEsFavorito) {
+            // Quitar: filtrar el título fuera del array
+            setFavorites(favs.filter(t => t !== title));
+            this[VIEW].showFavoriteButton(title, false);
+            this[VIEW].showToast(`"${title}" eliminada de favoritos`, 'success');
+        } else {
+            // Añadir: push al array y guardar
+            favs.push(title);
+            setFavorites(favs);
+            this[VIEW].showFavoriteButton(title, true);
+            this[VIEW].showToast(`"${title}" añadida a favoritos ⭐`, 'success');
+        }
+    }
+
+    //DWEC07 - Punto 6. Muestra la lista de producciones favoritas
+    //Punto 7. Solo accesible si hay usuario autenticado
+    _showFavorites = (pushHistory = true) => {
+        if (!this[USER]) return; // seguridad punto 7
+
+        const titles = getFavorites();
+        const productions = [];
+        for (const title of titles) {
+            const prod = this._findProductionByTitle(title);
+            if (prod) productions.push(prod);
+        }
+        this[VIEW].showFavoritesList(productions);
+
+        if (pushHistory) {
+            this._pushHistory({ action: 'favorites' });
+        }
+    }
+
+    handleShowFavorites = () => {
+        this._showFavorites();
+    }
+
+    //DWEC07 Punto 13.Mapa global con todas las producciones que tengan
+    _showGlobalMap = (pushHistory = true) => {
+        const productionsConCoords = [];
+        for (const prod of this[MODEL].productions) {
+            if (prod._lat !== undefined && prod._lng !== undefined) {
+                productionsConCoords.push(prod);
+            }
+        }
+        this[VIEW].showGlobalMap(productionsConCoords);
+
+        if (pushHistory) {
+            this._pushHistory({ action: 'globalMap' });
+        }
+    }
+
+    handleShowGlobalMap = () => {
+        this._showGlobalMap();
+    }
+
+    //DWEC07 Punto 9. Backup de datos con fetch POST al writeJSONBackup.php
+    handleBackup = () => {
+        if (!this[USER]) return; // seguridad punto 7
+
+        // Serializar el estado actual del modelo a JSON
+        const system = this[MODEL];
+        const backup = {
+            categories: [],
+            actors: [],
+            directors: [],
+            productions: [],
+            categoryAssignments: [],
+            directorAssignments: [],
+            actorAssignments: [],
+            users: []
+        };
+
+        for (const cat of system.categories) {
+            backup.categories.push({ name: cat.name, description: cat.description });
+        }
+        for (const actor of system.actors) {
+            backup.actors.push({ name: actor.name, lastname1: actor.lastname1, lastname2: actor.lastname2 || '', born: actor.born.toISOString().split('T')[0], picture: actor.picture || '' });
+        }
+        for (const director of system.directors) {
+            backup.directors.push({ name: director.name, lastname1: director.lastname1, lastname2: director.lastname2 || '', born: director.born.toISOString().split('T')[0], picture: director.picture || '' });
+        }
+        for (const prod of system.productions) {
+            const entry = { type: prod instanceof Movie ? 'Movie' : 'Serie', title: prod.title, publication: prod._publication.toISOString().split('T')[0], nationality: prod._nationality || '', synopsis: prod._synopsis || '', image: prod._image || '' };
+            if (prod instanceof Movie && prod._resource) entry.duration = prod._resource.duration;
+            if (prod instanceof Serie) entry.seasons = prod._seasons || 0;
+            // DWEC07 - Punto 11: guardar coordenadas si existen
+            if (prod._lat !== undefined && prod._lng !== undefined) {
+                entry.lat = prod._lat;
+                entry.lng = prod._lng;
+            }
+            backup.productions.push(entry);
+        }
+        for (const cat of system.categories) {
+            try {
+                for (const prod of system.getProductionsCategory(cat)) {
+                    backup.categoryAssignments.push({ category: cat.name, production: prod.title });
+                }
+            } catch (e) { /* ignorar */ }
+        }
+        for (const director of system.directors) {
+            try {
+                for (const prod of system.getProductionsDirector(director)) {
+                    backup.directorAssignments.push({ director: director.toString(), production: prod.title });
+                }
+            } catch (e) { /* ignorar */ }
+        }
+        for (const prod of system.productions) {
+            try {
+                for (const item of system.getCast(prod)) {
+                    backup.actorAssignments.push({ actor: item.actor.toString(), production: prod.title, role: item.role });
+                }
+            } catch (e) { /* ignorar */ }
+        }
+
+        // Enviar al PHP con fetch POST + FormData
+        const formData = new FormData();
+        formData.append('jsonObj', JSON.stringify(backup, null, 2));
+
+        fetch('writeJSONBackup.php', { method: 'post', body: formData })
+            .then((response) => response.text())
+            .then((filename) => {
+                this[VIEW].showToast(`Backup guardado: ${filename}`, 'success');
+            })
+            .catch(() => {
+                this[VIEW].showToast('Error al guardar el backup.', 'error');
+            });
+    }
+
+    /*Evento que se dispara al iniciar correctamente una sesión.Repinta el header con el badge del usuario y muestra el inicio de la aplicación con un toast de bienvenida*/
+    onOpenSession() {
+        const username = this[USER].username;
+        this[VIEW].showAuthUserBadge(username);
+        this[VIEW].bindLogout(this.handleLogout);
+        // DWEC07 Punto 6.Mostrar menú favoritos al abrir sesión
+        this[VIEW].showFavoritesMenu();
+        this[VIEW].bindFavorites(this.handleShowFavorites);
+        // DWEC07 Punto 9.
+        // Mostrar botón backup al abrir sesión
+        this[VIEW].showBackupBtn();
+        this[VIEW].bindBackupBtn(this.handleBackup);
+        this.onInit();
+        this[VIEW].showToast(`¡Hola, ${username}!`, 'success');
+    }
+
+    /*Evento que se dispara al cerrar la sesión. Limpia el usuario del controlador, borra la cookie y restablece el header al estado anónimo*/
+    onCloseSession() {
+        this[USER] = null;
+        deleteCookie('activeUser');
+        this._renderLoggedOutHeader();
+        // DWEC07 - Punto 6. Ocultar menú favoritos al cerrar sesión.
+        this[VIEW].removeFavoritesMenu();
+        // DWEC07 Punto 9. Ocultar botón backup al cerrar sesión.
+        this[VIEW].removeBackupBtn();
+        this.onInit();
     }
 }

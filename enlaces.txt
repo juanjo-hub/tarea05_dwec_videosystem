@@ -1,3 +1,5 @@
+El proyecto lo cloné en el repositorio creado en la tarea anterior para ir trabajando sobre el mismo proyecto.
+
 Repositorio:
 https://github.com/juanjo-hub/tarea05_dwec_videosystem
 

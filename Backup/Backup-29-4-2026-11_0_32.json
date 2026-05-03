@@ -1,0 +1,532 @@
+{
+  "categories": [
+    {
+      "name": "Default",
+      "description": "Default category"
+    },
+    {
+      "name": "Terror",
+      "description": "Suspense, sustos y lo paranormal"
+    },
+    {
+      "name": "Ciencia Ficción",
+      "description": "Futuros posibles, tecnología y exploración espacial"
+    },
+    {
+      "name": "Acción",
+      "description": "Aventura, adrenalina y grandes persecuciones"
+    }
+  ],
+  "actors": [
+    {
+      "name": "Sigourney",
+      "lastname1": "Weaver",
+      "lastname2": "",
+      "born": "1949-10-08",
+      "picture": "https://media.themoviedb.org/t/p/w300_and_h450_face/wTSnfktNBLd6kwQxgvkqYw6vEon.jpg"
+    },
+    {
+      "name": "John",
+      "lastname1": "Hurt",
+      "lastname2": "",
+      "born": "1940-01-22",
+      "picture": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRu91hZwExJwOg1q7Z2nofvHIqGXpGWGBYkJg&s"
+    },
+    {
+      "name": "James",
+      "lastname1": "McAvoy",
+      "lastname2": "",
+      "born": "1979-04-21",
+      "picture": "https://m.media-amazon.com/images/M/MV5BMTQzNzIxOTYzMl5BMl5BanBnXkFtZTcwNjYxNTk1Nw@@._V1_FMjpg_UX1000_.jpg"
+    },
+    {
+      "name": "Anya",
+      "lastname1": "Taylor-Joy",
+      "lastname2": "",
+      "born": "1996-04-16",
+      "picture": "https://m.media-amazon.com/images/M/MV5BNGFhYTZiMGMtNTgwMi00ZWY3LTlhNDEtMTY4MDI2YzlmNDI2XkEyXkFqcGc@._V1_.jpg"
+    },
+    {
+      "name": "Patrick",
+      "lastname1": "Wilson",
+      "lastname2": "",
+      "born": "1973-07-03",
+      "picture": "https://m.media-amazon.com/images/M/MV5BMTkzNzcxNzcxMF5BMl5BanBnXkFtZTgwOTM1ODUzMTE@._V1_FMjpg_UX1000_.jpg"
+    },
+    {
+      "name": "Vera",
+      "lastname1": "Farmiga",
+      "lastname2": "",
+      "born": "1973-08-06",
+      "picture": "https://images.mubicdn.net/images/cast_member/23765/cache-650230-1628157376/image-w856.jpg"
+    },
+    {
+      "name": "Michael B.",
+      "lastname1": "Jordan",
+      "lastname2": "",
+      "born": "1987-02-09",
+      "picture": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Michael_B_Jordan_-_Sinners_%28cropped%29.jpg/250px-Michael_B_Jordan_-_Sinners_%28cropped%29.jpg"
+    },
+    {
+      "name": "Hailee",
+      "lastname1": "Steinfeld",
+      "lastname2": "",
+      "born": "1996-12-11",
+      "picture": "https://upload.wikimedia.org/wikipedia/commons/2/20/Hailee_Steinfeld_%2821604481176%29_%28cropped%29-001.jpg"
+    },
+    {
+      "name": "Leonardo",
+      "lastname1": "DiCaprio",
+      "lastname2": "",
+      "born": "1974-11-11",
+      "picture": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Leonardo_DiCaprio_-_BFI_Southbank_3_%28crop%29.jpg/250px-Leonardo_DiCaprio_-_BFI_Southbank_3_%28crop%29.jpg"
+    },
+    {
+      "name": "Tom",
+      "lastname1": "Hardy",
+      "lastname2": "",
+      "born": "1977-09-15",
+      "picture": "https://image.tmdb.org/t/p/w500/d81K0RH8UX7tZj49tZaQhZ9ewH.jpg"
+    },
+    {
+      "name": "Harrison",
+      "lastname1": "Ford",
+      "lastname2": "",
+      "born": "1942-07-13",
+      "picture": "https://image.tmdb.org/t/p/w500/zVnHagUvXkR2StdOtquEwsiwSVt.jpg"
+    },
+    {
+      "name": "Rutger",
+      "lastname1": "Hauer",
+      "lastname2": "",
+      "born": "1944-01-23",
+      "picture": "https://upload.wikimedia.org/wikipedia/commons/e/ea/Rutger_Hauer_%282018%29.jpg"
+    },
+    {
+      "name": "Matt",
+      "lastname1": "Damon",
+      "lastname2": "",
+      "born": "1970-10-08",
+      "picture": "https://image.tmdb.org/t/p/w500/n2Dk0dHCh0UhEqmcjGz0ZY6Z5Um.jpg"
+    },
+    {
+      "name": "Jessica",
+      "lastname1": "Chastain",
+      "lastname2": "",
+      "born": "1977-03-24",
+      "picture": "https://image.tmdb.org/t/p/w500/oxXIMzJLhgvyVDhtnmLpi8iRtVN.jpg"
+    },
+    {
+      "name": "Samuel L.",
+      "lastname1": "Jackson",
+      "lastname2": "",
+      "born": "1948-12-21",
+      "picture": "https://image.tmdb.org/t/p/w500/nCJJ3NVksYNxIzEHcyC1XziwPVj.jpg"
+    },
+    {
+      "name": "Alfred",
+      "lastname1": "Molina",
+      "lastname2": "",
+      "born": "1953-05-24",
+      "picture": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/AlfredMolinaByJustinHoch2009.jpg/250px-AlfredMolinaByJustinHoch2009.jpg"
+    }
+  ],
+  "directors": [
+    {
+      "name": "Ridley",
+      "lastname1": "Scott",
+      "lastname2": "",
+      "born": "1937-11-30",
+      "picture": "https://image.tmdb.org/t/p/w500/zABJmN9opmqD4orWl3KSdCaSo7Q.jpg"
+    },
+    {
+      "name": "M. Night",
+      "lastname1": "Shyamalan",
+      "lastname2": "",
+      "born": "1970-08-06",
+      "picture": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnzIV4F9YotPIluzPGHmDDzUqz1ei5b4VxNg&s"
+    },
+    {
+      "name": "James",
+      "lastname1": "Wan",
+      "lastname2": "",
+      "born": "1977-02-26",
+      "picture": "https://pics.filmaffinity.com/016750410276030-nm_200.jpg"
+    },
+    {
+      "name": "Ryan",
+      "lastname1": "Coogler",
+      "lastname2": "",
+      "born": "1986-05-23",
+      "picture": "https://image.tmdb.org/t/p/w500/mEF1ppuFmFqQEYWTo6aTJQYYu4T.jpg"
+    },
+    {
+      "name": "Christopher",
+      "lastname1": "Nolan",
+      "lastname2": "",
+      "born": "1970-07-30",
+      "picture": "https://image.tmdb.org/t/p/w500/xuAIuYSmsUzKlUMBFGVZaWsY3DZ.jpg"
+    },
+    {
+      "name": "Steven",
+      "lastname1": "Spielberg",
+      "lastname2": "",
+      "born": "1946-12-18",
+      "picture": "https://image.tmdb.org/t/p/w500/tZxcg19YQ3e8fJ0pOs7hjlnmmr6.jpg"
+    },
+    {
+      "name": "George",
+      "lastname1": "Miller",
+      "lastname2": "",
+      "born": "1945-03-03",
+      "picture": "https://image.tmdb.org/t/p/w500/vXQPE3cGp7IYDtMmUzvMeB7rCOi.jpg"
+    },
+    {
+      "name": "Martin",
+      "lastname1": "Scorsese",
+      "lastname2": "",
+      "born": "1942-11-17",
+      "picture": "https://image.tmdb.org/t/p/w500/9U9Y5GQuWX3EZy39B8nkk4NY01S.jpg"
+    },
+    {
+      "name": "Quentin",
+      "lastname1": "Tarantino",
+      "lastname2": "",
+      "born": "1963-03-27",
+      "picture": "https://image.tmdb.org/t/p/w500/1gjcpAa99FAOWGnrUvHEXXsRs7o.jpg"
+    }
+  ],
+  "productions": [
+    {
+      "type": "Movie",
+      "title": "Alien, el octavo pasajero",
+      "publication": "1979-05-25",
+      "nationality": "USA",
+      "synopsis": "La tripulación de una nave comercial es acechada por una criatura alienígena letal después de responder a una señal de socorro.",
+      "image": "https://image.tmdb.org/t/p/w500/vfrQk5IPloGg1v9Rzbh2Eg3VGyM.jpg",
+      "duration": 117
+    },
+    {
+      "type": "Movie",
+      "title": "Múltiple",
+      "publication": "2017-01-20",
+      "nationality": "USA",
+      "synopsis": "Un hombre con trastorno de identidad disociativo y 23 personalidades secuestra a tres adolescentes mientras una 24ª personalidad amenaza con emerger.",
+      "image": "https://pics.filmaffinity.com/split-172094905-large.jpg",
+      "duration": 117
+    },
+    {
+      "type": "Movie",
+      "title": "Expediente Warren",
+      "publication": "2013-07-19",
+      "nationality": "USA",
+      "synopsis": "Los investigadores paranormales Ed y Lorraine Warren ayudan a una familia aterrorizada por una oscura presencia en su casa de campo.",
+      "image": "https://image.tmdb.org/t/p/w500/wVYREutTvI2tmxr6ujrHT704wGF.jpg",
+      "duration": 112
+    },
+    {
+      "type": "Movie",
+      "title": "Sinners",
+      "publication": "2025-04-18",
+      "nationality": "USA",
+      "synopsis": "Dos hermanos gemelos regresan a su ciudad natal con intención de empezar de nuevo, pero descubren que un mal aún mayor los espera.",
+      "image": "https://image.tmdb.org/t/p/w500/yqsuxjSIRUpOBrQQQkbfVtEm5Hk.jpg",
+      "duration": 137
+    },
+    {
+      "type": "Movie",
+      "title": "Inception",
+      "publication": "2010-07-16",
+      "nationality": "USA",
+      "synopsis": "Un ladrón que roba secretos del subconsciente es contratado para implantar una idea en la mente de un objetivo.",
+      "image": "https://image.tmdb.org/t/p/w500/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg",
+      "duration": 148
+    },
+    {
+      "type": "Movie",
+      "title": "Blade Runner",
+      "publication": "1982-06-25",
+      "nationality": "USA",
+      "synopsis": "Un cazador de replicantes debe eliminar a cuatro humanos artificiales fugados en un Los Ángeles distópico.",
+      "image": "https://image.tmdb.org/t/p/w500/63N9uy8nd9j7Eog2axPQ8lbr3Wj.jpg",
+      "duration": 117
+    },
+    {
+      "type": "Movie",
+      "title": "The Martian",
+      "publication": "2015-10-02",
+      "nationality": "USA",
+      "synopsis": "Un astronauta queda abandonado en Marte y debe sobrevivir con ingenio mientras la NASA planea su rescate.",
+      "image": "https://image.tmdb.org/t/p/w500/5BHuvQ6p9kfc091Z8RiFNhCwL4b.jpg",
+      "duration": 144
+    },
+    {
+      "type": "Movie",
+      "title": "Glass",
+      "publication": "2019-01-18",
+      "nationality": "USA",
+      "synopsis": "Tras los eventos de Múltiple y El Protegido, David Dunn persigue a La Bestia mientras el misterioso Elijah Price orquesta un plan en la sombra.",
+      "image": "https://image.tmdb.org/t/p/w500/svIDTNUoajS8dLEo7EosxvyAsgJ.jpg",
+      "duration": 129
+    },
+    {
+      "type": "Movie",
+      "title": "Indiana Jones: En busca del arca perdida",
+      "publication": "1981-06-12",
+      "nationality": "USA",
+      "synopsis": "El arqueólogo y aventurero Indiana Jones recorre el mundo buscando el Arca de la Alianza antes que los nazis.",
+      "image": "https://image.tmdb.org/t/p/w500/ceG9VzoRAVGwivFU403Wc3AHRys.jpg",
+      "duration": 115
+    },
+    {
+      "type": "Movie",
+      "title": "Infiltrados",
+      "publication": "2006-10-06",
+      "nationality": "USA",
+      "synopsis": "Un policía se infiltra en la mafia irlandesa de Boston mientras un topo de la mafia se infiltra en la policía estatal.",
+      "image": "https://image.tmdb.org/t/p/w500/tGLO9zw5ZtCeyyEWgbYGgsFxC6i.jpg",
+      "duration": 151
+    },
+    {
+      "type": "Movie",
+      "title": "Mad Max: Fury Road",
+      "publication": "2015-05-15",
+      "nationality": "Australia",
+      "synopsis": "En un páramo desértico postapocalíptico, Furiosa y Max se rebelan contra un tirano para liberar a un grupo de mujeres cautivas.",
+      "image": "https://image.tmdb.org/t/p/w500/hA2ple9q4qnwxp3hKVNhroipsir.jpg",
+      "duration": 120
+    },
+    {
+      "type": "Movie",
+      "title": "Django desencadenado",
+      "publication": "2012-12-25",
+      "nationality": "USA",
+      "synopsis": "Un esclavo liberado se une a un cazarrecompensas alemán para rescatar a su esposa de un cruel terrateniente en el sur profundo.",
+      "image": "https://image.tmdb.org/t/p/w500/7oWY8VDWW7thTzWh3OKYRkWUlD5.jpg",
+      "duration": 165
+    }
+  ],
+  "categoryAssignments": [
+    {
+      "category": "Terror",
+      "production": "Alien, el octavo pasajero"
+    },
+    {
+      "category": "Terror",
+      "production": "Múltiple"
+    },
+    {
+      "category": "Terror",
+      "production": "Expediente Warren"
+    },
+    {
+      "category": "Terror",
+      "production": "Sinners"
+    },
+    {
+      "category": "Ciencia Ficción",
+      "production": "Inception"
+    },
+    {
+      "category": "Ciencia Ficción",
+      "production": "Blade Runner"
+    },
+    {
+      "category": "Ciencia Ficción",
+      "production": "The Martian"
+    },
+    {
+      "category": "Ciencia Ficción",
+      "production": "Glass"
+    },
+    {
+      "category": "Acción",
+      "production": "Indiana Jones: En busca del arca perdida"
+    },
+    {
+      "category": "Acción",
+      "production": "Infiltrados"
+    },
+    {
+      "category": "Acción",
+      "production": "Mad Max: Fury Road"
+    },
+    {
+      "category": "Acción",
+      "production": "Django desencadenado"
+    }
+  ],
+  "directorAssignments": [
+    {
+      "director": "Ridley Scott",
+      "production": "Alien, el octavo pasajero"
+    },
+    {
+      "director": "Ridley Scott",
+      "production": "Blade Runner"
+    },
+    {
+      "director": "Ridley Scott",
+      "production": "The Martian"
+    },
+    {
+      "director": "M. Night Shyamalan",
+      "production": "Múltiple"
+    },
+    {
+      "director": "M. Night Shyamalan",
+      "production": "Glass"
+    },
+    {
+      "director": "James Wan",
+      "production": "Expediente Warren"
+    },
+    {
+      "director": "Ryan Coogler",
+      "production": "Sinners"
+    },
+    {
+      "director": "Christopher Nolan",
+      "production": "Inception"
+    },
+    {
+      "director": "Steven Spielberg",
+      "production": "Indiana Jones: En busca del arca perdida"
+    },
+    {
+      "director": "George Miller",
+      "production": "Mad Max: Fury Road"
+    },
+    {
+      "director": "Martin Scorsese",
+      "production": "Infiltrados"
+    },
+    {
+      "director": "Quentin Tarantino",
+      "production": "Django desencadenado"
+    }
+  ],
+  "actorAssignments": [
+    {
+      "actor": "Sigourney Weaver",
+      "production": "Alien, el octavo pasajero",
+      "role": "Teniente Ellen Ripley"
+    },
+    {
+      "actor": "John Hurt",
+      "production": "Alien, el octavo pasajero",
+      "role": "Kane"
+    },
+    {
+      "actor": "James McAvoy",
+      "production": "Múltiple",
+      "role": "Kevin Wendell Crumb / La Horda"
+    },
+    {
+      "actor": "Anya Taylor-Joy",
+      "production": "Múltiple",
+      "role": "Casey Cooke"
+    },
+    {
+      "actor": "Patrick Wilson",
+      "production": "Expediente Warren",
+      "role": "Ed Warren"
+    },
+    {
+      "actor": "Vera Farmiga",
+      "production": "Expediente Warren",
+      "role": "Lorraine Warren"
+    },
+    {
+      "actor": "Michael B. Jordan",
+      "production": "Sinners",
+      "role": "Smoke / Stack"
+    },
+    {
+      "actor": "Hailee Steinfeld",
+      "production": "Sinners",
+      "role": "Mary"
+    },
+    {
+      "actor": "Leonardo DiCaprio",
+      "production": "Inception",
+      "role": "Dom Cobb"
+    },
+    {
+      "actor": "Tom Hardy",
+      "production": "Inception",
+      "role": "Eames"
+    },
+    {
+      "actor": "Harrison Ford",
+      "production": "Blade Runner",
+      "role": "Rick Deckard"
+    },
+    {
+      "actor": "Rutger Hauer",
+      "production": "Blade Runner",
+      "role": "Roy Batty"
+    },
+    {
+      "actor": "Matt Damon",
+      "production": "The Martian",
+      "role": "Mark Watney"
+    },
+    {
+      "actor": "Jessica Chastain",
+      "production": "The Martian",
+      "role": "Comandante Melissa Lewis"
+    },
+    {
+      "actor": "James McAvoy",
+      "production": "Glass",
+      "role": "Kevin Wendell Crumb / La Horda"
+    },
+    {
+      "actor": "Samuel L. Jackson",
+      "production": "Glass",
+      "role": "Elijah Price / Mr. Glass"
+    },
+    {
+      "actor": "Harrison Ford",
+      "production": "Indiana Jones: En busca del arca perdida",
+      "role": "Indiana Jones"
+    },
+    {
+      "actor": "Alfred Molina",
+      "production": "Indiana Jones: En busca del arca perdida",
+      "role": "Satipo"
+    },
+    {
+      "actor": "Leonardo DiCaprio",
+      "production": "Infiltrados",
+      "role": "Billy Costigan"
+    },
+    {
+      "actor": "Matt Damon",
+      "production": "Infiltrados",
+      "role": "Colin Sullivan"
+    },
+    {
+      "actor": "Anya Taylor-Joy",
+      "production": "Mad Max: Fury Road",
+      "role": "Furiosa (joven)"
+    },
+    {
+      "actor": "Tom Hardy",
+      "production": "Mad Max: Fury Road",
+      "role": "Max Rockatansky"
+    },
+    {
+      "actor": "Leonardo DiCaprio",
+      "production": "Django desencadenado",
+      "role": "Calvin J. Candie"
+    },
+    {
+      "actor": "Samuel L. Jackson",
+      "production": "Django desencadenado",
+      "role": "Stephen"
+    }
+  ],
+  "users": []
+}

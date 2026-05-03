@@ -1,0 +1,346 @@
+/* ============================================================
+ *  auth.css - Estilos del sistema de autenticación
+ *  VideoSystem - DWEC07 (Puntos 2, 3 y 4)
+ *  ----------------------------------------------------------
+ *  IMPORTANTE: este archivo NO modifica el .nav-container,
+ *  ni el .nav-menu, ni nada del header existente. El bloque
+ *  user-area es un hijo directo del nav-container (al mismo
+ *  nivel que el logo y el <ul>), por lo que el flexbox del
+ *  nav lo coloca naturalmente al final con el mismo gap que
+ *  los demás elementos.
+ * ============================================================ */
+
+/* ============================================================
+ *  ZONA DE USUARIO (contenedor)
+ *  ----------------------------------------------------------
+ *  El #userArea es el TERCER hijo del .nav-container, que tiene
+ *  justify-content: space-between. Para que el menú no se vaya
+ *  al centro y los elementos se distribuyan como: 
+ *  [logo izquierda] [menú+userArea derecha], aplicamos
+ *  margin-left: auto al <ul> hermano anterior usando un
+ *  selector que no necesita modificar styles.css.
+ * ============================================================ */
+
+/* El <ul> que precede al #userArea se empuja a la derecha
+   junto con el userArea, dejando al logo solo a la izquierda. */
+.nav-container > .nav-menu:has(+ #userArea) {
+    margin-left: auto;
+}
+
+.user-area {
+    display: flex;
+    align-items: center;
+    margin-left: 1rem;       /* separación del menú al userArea */
+}
+
+/* Si el userArea está vacío (primer momento de carga), no
+   ocupa hueco para no descolocar el flex. */
+.user-area:empty {
+    display: none;
+}
+
+/* ============================================================
+ *  BOTÓN "Iniciar sesión" (estado anónimo)
+ * ============================================================ */
+.btn-login {
+    background: transparent;
+    border: 1px solid #e94560;
+    color: #e94560;
+    padding: 0.4rem 1rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+    text-decoration: none;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.btn-login:hover {
+    background: #e94560;
+    color: #fff;
+}
+
+.btn-login:focus-visible {
+    outline: 2px solid #e94560;
+    outline-offset: 2px;
+}
+
+/* ============================================================
+ *  ESTADO AUTENTICADO: avatar + nombre + cerrar sesión
+ * ============================================================ */
+.user-authenticated {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1;
+}
+
+.user-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #e94560 0%, #d13550 100%);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-bottom: 3px;
+    box-shadow: 0 2px 6px rgba(233, 69, 96, 0.3);
+}
+
+.user-name {
+    color: #e6edf3;
+    font-size: 0.7rem;
+    font-weight: 500;
+}
+
+.btn-logout {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #e6edf3;
+    padding: 0.45rem 0.85rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: all 0.2s;
+    text-decoration: none;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.btn-logout:hover {
+    background: rgba(233, 69, 96, 0.15);
+    border-color: #e94560;
+    color: #e94560;
+}
+
+.btn-logout:focus-visible {
+    outline: 2px solid #e94560;
+    outline-offset: 2px;
+}
+
+/* ============================================================
+ *  FORMULARIO DE LOGIN (en el <main>)
+ * ============================================================ */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 60vh;
+    padding: 3rem 1rem;
+}
+
+.login-card {
+    background: #1f1230;
+    border: 1px solid #3d2858;
+    border-radius: 12px;
+    padding: 2.5rem 2rem;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.login-header-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #e94560 0%, #d13550 100%);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    margin: 0 auto 1rem;
+    box-shadow: 0 6px 16px rgba(233, 69, 96, 0.35);
+}
+
+.login-header h2 {
+    margin: 0 0 0.5rem 0;
+    color: #e6edf3;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.login-header p {
+    margin: 0;
+    color: #9ca3af;
+    font-size: 0.9rem;
+}
+
+.login-form .form-group {
+    margin-bottom: 1.25rem;
+}
+
+.login-form label {
+    display: block;
+    color: #c9d1d9;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.login-form .input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.login-form .input-icon {
+    position: absolute;
+    left: 0.85rem;
+    color: #6b7280;
+    pointer-events: none;
+    font-size: 0.9rem;
+}
+
+.login-form input[type="text"],
+.login-form input[type="password"] {
+    width: 100%;
+    padding: 0.7rem 0.9rem 0.7rem 2.4rem;
+    background: #0d0820;
+    border: 1px solid #3d2858;
+    border-radius: 6px;
+    color: #e6edf3;
+    font-size: 0.95rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+}
+
+.login-form input[type="text"]:focus,
+.login-form input[type="password"]:focus {
+    outline: none;
+    border-color: #e94560;
+    box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.2);
+}
+
+.login-form input::placeholder {
+    color: #6b7280;
+}
+
+.login-form .btn-submit {
+    width: 100%;
+    background: linear-gradient(135deg, #e94560 0%, #d13550 100%);
+    color: #ffffff;
+    border: none;
+    padding: 0.85rem 1rem;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 0.5rem;
+}
+
+.login-form .btn-submit:hover {
+    background: linear-gradient(135deg, #d13550 0%, #b82c44 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(233, 69, 96, 0.35);
+}
+
+.login-form .btn-submit:focus-visible {
+    outline: 3px solid #f9a8b4;
+    outline-offset: 2px;
+}
+
+.login-form .btn-submit:active {
+    transform: translateY(0);
+}
+
+/* Mensaje de error de credenciales inválidas */
+.login-error {
+    background: #2d1b1e;
+    border: 1px solid #da3633;
+    color: #f0a0a0;
+    padding: 0.7rem 1rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.login-error i {
+    color: #da3633;
+    flex-shrink: 0;
+}
+
+/* Pista de credenciales (modo demo)*/
+.login-hint {
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid #3d2858;
+    text-align: center;
+    color: #6b7280;
+    font-size: 0.8rem;
+}
+
+.login-hint code {
+    background: #0d0820;
+    padding: 0.15rem 0.4rem;
+    border-radius: 3px;
+    color: #e94560;
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem;
+}
+
+
+@media (max-width: 768px) {
+    .user-name {
+        font-size: 0.65rem;
+    }
+    .user-avatar {
+        width: 30px;
+        height: 30px;
+        font-size: 0.8rem;
+    }
+    .btn-logout span {
+        display: none; 
+    }
+    .btn-logout {
+        padding: 0.5rem 0.7rem;
+    }
+    .btn-login span {
+        display: none; 
+    }
+    .btn-login {
+        padding: 0.5rem 0.7rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-card {
+        padding: 1.75rem 1.25rem;
+    }
+    .login-header h2 {
+        font-size: 1.25rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .login-form .btn-submit:hover {
+        transform: none;
+    }
+}

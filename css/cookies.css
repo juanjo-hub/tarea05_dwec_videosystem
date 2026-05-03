@@ -1,0 +1,230 @@
+/* ============================================================
+ *  cookies.css - Aviso de uso de cookies (DWEC07 - Punto 1)
+ *  ----------------------------------------------------------
+ *  Banner anclado a la parte inferior de la página, con el
+ *  contenido limitado por max-width y centrado horizontalmente
+ *  para que sea legible y cómodo en cualquier tamaño de
+ *  pantalla (móvil, tablet, desktop, monitores grandes).
+ * ============================================================ */
+
+/* ---- Contenedor exterior: ocupa todo el ancho de la ventana ---- */
+.cookies-toast {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    background: #ffffff;
+    color: #1f2937;
+    border-top: 3px solid #e94560;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.35);
+    /* No usamos padding aquí: el .cookies-toast-inner se encarga */
+    animation: cookiesSlideUp 0.35s ease-out;
+}
+
+@keyframes cookiesSlideUp {
+    from { transform: translateY(100%); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+}
+
+.cookies-toast.closing {
+    animation: cookiesSlideDown 0.3s ease-in forwards;
+}
+
+@keyframes cookiesSlideDown {
+    from { transform: translateY(0);    opacity: 1; }
+    to   { transform: translateY(100%); opacity: 0; }
+}
+
+/* ---- Contenedor interior: contenido centrado con max-width ---- */
+.cookies-toast-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+}
+
+/* ---- Icono ---- */
+.cookies-toast-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #fce7eb;
+    color: #e94560;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 1.15rem;
+}
+
+/* ---- Bloque de texto ---- */
+.cookies-toast-text {
+    flex: 1;
+    min-width: 240px;
+}
+
+.cookies-toast-text h4 {
+    margin: 0 0 4px 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #111827;
+}
+
+.cookies-toast-text p {
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: #4b5563;
+}
+
+/* ---- Botones de acción ---- */
+.cookies-toast-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+.cookies-toast-actions .btn-cookie-accept,
+.cookies-toast-actions .btn-cookie-deny {
+    padding: 0.55rem 1.25rem;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    /* min-height: 40px aseguramos área táctil suficiente WCAG 2.5.5 */
+    min-height: 40px;
+}
+
+.cookies-toast-actions .btn-cookie-accept {
+    background: #e94560;
+    color: #ffffff;
+    border: 1px solid #e94560;
+    font-weight: 600;
+}
+
+.cookies-toast-actions .btn-cookie-accept:hover {
+    background: #d13550;
+    border-color: #d13550;
+}
+
+.cookies-toast-actions .btn-cookie-accept:focus-visible {
+    outline: 3px solid #f9a8b4;
+    outline-offset: 2px;
+}
+
+.cookies-toast-actions .btn-cookie-deny {
+    background: #ffffff;
+    color: #374151;
+    border: 1px solid #d1d5db;
+}
+
+.cookies-toast-actions .btn-cookie-deny:hover {
+    background: #f3f4f6;
+    border-color: #9ca3af;
+}
+
+.cookies-toast-actions .btn-cookie-deny:focus-visible {
+    outline: 3px solid #d1d5db;
+    outline-offset: 2px;
+}
+
+/* ---- Mensaje cuando el usuario deniega cookies ---- */
+.cookies-denied-message {
+    max-width: 600px;
+    margin: 3rem auto;
+    padding: 1.5rem;
+    background: #2d1b1e;
+    border: 1px solid #da3633;
+    border-radius: 8px;
+    color: #f0a0a0;
+    text-align: center;
+}
+
+.cookies-denied-message i {
+    font-size: 2.5rem;
+    color: #da3633;
+    margin-bottom: 0.8rem;
+    display: block;
+}
+
+.cookies-denied-message strong {
+    display: block;
+    font-size: 1.1rem;
+    color: #e6edf3;
+    margin-bottom: 0.5rem;
+}
+
+/* ============================================================
+ *  RESPONSIVE
+ * ============================================================ */
+
+/* Tablet: el texto puede ir en una línea pero compacto */
+@media (max-width: 900px) {
+    .cookies-toast-inner {
+        padding: 0.9rem 1.25rem;
+        gap: 1rem;
+    }
+    .cookies-toast-text h4 {
+        font-size: 0.9rem;
+    }
+    .cookies-toast-text p {
+        font-size: 0.825rem;
+    }
+}
+
+/* Móvil grande: el texto ocupa toda la fila, los botones bajan a la siguiente */
+@media (max-width: 640px) {
+    .cookies-toast-inner {
+        padding: 0.85rem 1rem;
+        gap: 0.75rem;
+    }
+    .cookies-toast-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+    }
+    .cookies-toast-text {
+        flex: 1 1 100%;
+        min-width: 0;
+    }
+    .cookies-toast-actions {
+        flex: 1 1 100%;
+        justify-content: flex-end;
+    }
+}
+
+/* Móvil pequeño: botones a ancho completo y apilados verticalmente para máxima legibilidad */
+@media (max-width: 380px) {
+    .cookies-toast-inner {
+        padding: 0.8rem 0.9rem;
+    }
+    .cookies-toast-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    .cookies-toast-actions .btn-cookie-accept,
+    .cookies-toast-actions .btn-cookie-deny {
+        width: 100%;
+    }
+}
+
+/* Pantallas grandes: el contenido se centra y no se estira */
+@media (min-width: 1400px) {
+    .cookies-toast-inner {
+        padding: 1.1rem 1.5rem;
+    }
+}
+
+/* Respeto al usuario: si tiene activado "reducir movimiento" en el sistema,
+   desactivamos las animaciones para no marearle. (WCAG 2.3.3) */
+@media (prefers-reduced-motion: reduce) {
+    .cookies-toast,
+    .cookies-toast.closing {
+        animation: none;
+    }
+}

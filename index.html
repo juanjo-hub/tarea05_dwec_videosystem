@@ -4,9 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VideoSystem</title>
+    <!-- Leaflet CSS (DWEC07 - Puntos 10-13) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+          integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+          crossorigin=""/>
     <!--Fontawesome para iconos-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/forms.css">
+    <link rel="stylesheet" href="css/cookies.css">
+    <link rel="stylesheet" href="css/auth.css">
 </head>
 <body>
     <!-- HEADER y NAV -->
@@ -24,10 +31,24 @@
                     <!-- Las categorías se inyectarán dinámicamente -->
                     <li><a id="nav-actors" class="nav-link" href="#">Actores</a></li>
                     <li><a id="nav-directors" class="nav-link" href="#">Directores</a></li>
+                    <!-- DWEC07 - Punto 13: enlace al mapa global -->
+                    <li><a id="nav-globalmap" class="nav-link" href="#"><i class="fas fa-map"></i> Mapa</a></li>
                     <li><a id="nav-close-windows" class="nav-link" href="#">
                         <i class="fas fa-times-circle"></i> Cerrar ventanas
                     </a></li>
+                    <!-- DWEC07 Punto 6: enlace Mis favoritos, oculto hasta login -->
+                    <li id="nav-favorites-item" style="display:none">
+                        <a id="nav-favorites" class="nav-link" href="#">
+                            <i class="fas fa-star"></i> Mis favoritos
+                        </a>
+                    </li>
                 </ul>
+                <!-- DWEC07 Punto 9: botón backup, oculto hasta login -->
+                <button id="btn-backup" style="display:none" title="Guardar backup JSON" class="btn-backup">
+                    <i class="fas fa-download"></i>
+                </button>
+                <!-- Zona de usuario (login / autenticado) - DWEC07 -->
+                <div id="userArea" class="user-area"></div>
             </div>
         </nav>
     </header>
@@ -61,7 +82,12 @@
     </div>
 
     <!-- Scripts UT04 ,modelos -->
+    <!-- Leaflet JS (DWEC07 - Puntos 10-13) -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+            integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+            crossorigin=""></script>
     <script src="js/exceptions.js"></script>
+    <script src="js/util.js"></script>
     <script src="js/entities.js"></script> 
     <script src="js/videosystem.js"></script>
     <!-- Scripts MVC UT05 + Forms UT06 -->

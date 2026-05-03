@@ -1,12 +1,12 @@
 "use strict";
 
 const VideoSystem = (function () {
-  // Control de instancia (Singleton)
+  //Control de instancia(Singleton)
   let instantiated;
 
   class VideoSystem {
     constructor(name) {
-      // Evita instanciación múltiple
+      //Evita instanciación múltiple
       if (instantiated) {
         throw new InvalidAccessConstructorException("VideoSystem");
       }
@@ -850,6 +850,20 @@ const VideoSystem = (function () {
       }
 
       return new User(username, email, password);
+    }
+
+    /* validateUser - Comprueba credenciales contra el modelo (DWEC07 - Punto 2) */
+    validateUser(username, password) {
+      if (!username || !password) return false;
+      if (!this._users.has(username)) return false;
+      const user = this._users.get(username);
+      return user.password === password;
+    }
+
+    /* getUser - Devuelve el objeto User a partir de su username, o null si no existe */
+    getUser(username) {
+      if (!username) return null;
+      return this._users.has(username) ? this._users.get(username) : null;
     }
 
     /* createProduction (Flyweight)*/
